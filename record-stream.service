@@ -1,12 +1,12 @@
 [Unit]
-Description=R/a/dio Stream Recorder
+Description=Shamiradio Recorder
 Wants=network-online.target
 After=network-online.target
 
 [Service]
 User=root
-WorkingDirectory=/media/public/r-a-dio/automated
-ExecStart=/bin/bash /usr/local/bin/record-stream.sh
+WorkingDirectory=/media/public/shamiradio
+ExecStart=/bin/bash /usr/local/bin/record-shamiradio.sh
 Restart=always
 RestartSec=30
 StartLimitBurst=0
