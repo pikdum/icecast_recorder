@@ -1,6 +1,6 @@
-# r/a/dio recorder
+# icecast recorder
 
-daemon to record r/a/dio dj streams
+daemon to record icecast streams
 
 ## requirements
 
