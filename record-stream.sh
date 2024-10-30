@@ -5,6 +5,10 @@ name="shamiradio"
 api="https://shamiradio.imgoodatth.is/status-json.xsl"
 stream="https://shamiradio.imgoodatth.is/main.mp3"
 
+notify() {
+    echo -e "$name started streaming\n$stream" | curl -s -T- ntfy.sh/"$name"_alert
+}
+
 is_streaming() {
     [ "$DEBUG" = true ] && [ -e "is_streaming" ] && return 0
     echo "$data" | jq -e '.icestats.source != null' >/dev/null
@@ -39,6 +43,7 @@ while true; do
     if ! is_recording && is_streaming; then
         start_recording
         echo "Recording started: $recording"
+        notify
         log_songs
     elif is_recording && ! is_streaming; then
         stop_recording
