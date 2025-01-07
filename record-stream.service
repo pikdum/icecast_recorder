@@ -1,7 +1,8 @@
 [Unit]
 Description=Shamiradio Recorder
 Wants=network-online.target
-After=network-online.target
+After=network-online.target media-public.mount
+Requires=media-public.mount
 
 [Service]
 User=root
