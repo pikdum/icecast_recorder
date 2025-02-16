@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-scp record-stream.sh root@yui.usagi.zone:/usr/local/bin/record-shamiradio.sh
-scp record-stream.service root@yui.usagi.zone:/etc/systemd/system/record-shamiradio.service
-ssh root@yui.usagi.zone 'systemctl daemon-reload && systemctl restart record-shamiradio'
+export COMPOSE_BAKE=true
+export DOCKER_HOST="ssh://admin@truenas.usagi.zone"
+export OUT_DIR="/mnt/zpool0/box/Public/shamiradio/"
+
+docker compose up --build -d

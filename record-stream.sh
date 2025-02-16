@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-name="shamiradio"
-api="https://shamiradio.imgoodatth.is/status-json.xsl"
+name="$ICECAST_NAME"
+api="$ICECAST_API"
 
 notify() {
     echo -e "$name started streaming\n$stream" | curl -s -T- ntfy.sh/"$name"_alert
@@ -38,6 +38,9 @@ log_songs() {
 
 trap stop_recording EXIT
 
+echo "Started: $(date)"
+echo "Name: $name"
+echo "API: $api"
 while true; do
     data=$(curl -s "$api")
     if ! is_recording && is_streaming; then

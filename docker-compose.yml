@@ -1,0 +1,14 @@
+services:
+  icecast_recorder:
+    image: icecast_recorder:latest
+    container_name: icecast_recorder
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ${OUT_DIR}:/app/out
+    env_file:
+      - .env
+    entrypoint: /app/record-stream.sh
+    restart: always
+    working_dir: /app/out
