@@ -14,7 +14,6 @@ The flake exposes:
 
 - `packages.<system>.default`
 - `apps.<system>.default`
-- `nixosModules.default`
 
 Run it directly in any directory where you want recordings to be written:
 
@@ -24,38 +23,7 @@ ICECAST_API=https://radio.example.com/status-json.xsl \
 nix run github:pikdum/icecast_recorder
 ```
 
-Use it from a NixOS flake like this:
-
-```nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    icecast-recorder.url = "github:pikdum/icecast_recorder";
-  };
-
-  outputs = { nixpkgs, icecast-recorder, ... }: {
-    nixosConfigurations.my-host = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        icecast-recorder.nixosModules.default
-        {
-          services.icecast-recorders.example-station = {
-            workingDirectory = "/srv/icecast/example-station";
-            icecastName = "example-station";
-            icecastApi = "https://radio.example.com/status-json.xsl";
-          };
-
-          services.icecast-recorders.another-station = {
-            icecastName = "another-station";
-            icecastApi = "https://another.example.com/status-json.xsl";
-          };
-        }
-      ];
-    };
-  };
-}
-```
-
-Each instance creates a systemd unit named `icecast-recorder-<instance>.service`.
-
-If `workingDirectory` is omitted, it defaults to `/var/lib/icecast-recorder/<instance-name>`.
+Service wiring (systemd units, users, working directories) is intentionally
+left to the consumer: run `packages.<system>.default` under systemd with
+`ICECAST_NAME`/`ICECAST_API` set and `WorkingDirectory` pointed at the
+recording directory.
