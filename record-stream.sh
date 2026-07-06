@@ -12,7 +12,7 @@ notify() {
 
 is_streaming() {
     [ "$DEBUG" = true ] && [ -e "is_streaming" ] && return 0
-    echo "$data" | jq -e '.icestats.source != null' >/dev/null
+    echo "$data" | jq -e '.icestats.source != null' >/dev/null 2>&1
 }
 
 is_recording() {
@@ -36,7 +36,7 @@ stop_recording() {
 }
 
 log_songs() {
-    echo "$data" | jq -r '.icestats.source | "\(.title)"' >>"$log"
+    echo "$data" | jq -re '.icestats.source.title // empty' >>"$log" 2>/dev/null || return 0
     sort --merge --unique "$log" -o "$log"
 }
 
@@ -46,7 +46,7 @@ echo "Started: $(date)"
 echo "Name: $name"
 echo "API: $api"
 while true; do
-    data=$(curl -s "$api")
+    data=$(curl -s --connect-timeout 10 --max-time 30 "$api") || data=""
     if ! is_recording && is_streaming; then
         start_recording
         echo "Recording started: $recording"
